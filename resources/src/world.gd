@@ -1,8 +1,8 @@
 extends Node
 
-const NETWORK = preload("res://resources/src/Network.gd")
-
+const NETWORK = preload("res://resources/src/inc/Network.gd")
 onready var Network = NETWORK.new()
+
 onready var player_container = get_node("player_container")
 
 var screensize
@@ -13,7 +13,7 @@ func _ready():
 	
 	var audioPlayer = AudioStreamPlayer.new()
 	self.add_child(audioPlayer)
-	audioPlayer.stream = load("res://resources/sounds/music/stages/greens_greens.wav")
+	audioPlayer.stream = load("res://resources/sound/music/stages/greens_greens.wav")
 	audioPlayer.volume_db = -20
 	audioPlayer.play()
 	

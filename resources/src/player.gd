@@ -4,8 +4,8 @@ signal health_updated(health)
 signal killed()
 signal knockback()
 
-const P1ID = "1339"
-const P2ID = "1354"
+const AUDIO = preload("res://resources/src/inc/Audio.gd")
+onready var Audio = AUDIO.new()
 
 # Movement
 const UP = Vector2(0, -1)
@@ -37,7 +37,6 @@ onready var attack_light_collision = $fighterKirby/attack_light_hit/CollisionSha
 onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light_particles
 
 onready var damageText = $damage_percentage
-onready	var audio = AudioStreamPlayer.new()
 
 func _physics_process(delta):
 	if typeof(playerID) != TYPE_NIL && playerID != null:
@@ -47,8 +46,6 @@ func _physics_process(delta):
 	
 	if !motion.has(instanceId):
 		motion[instanceId] = Vector2()
-	
-	self.add_child(audio)
 
 	motion[instanceId].y += GRAVITY
 	var friction = false
@@ -115,8 +112,7 @@ func _physics_process(delta):
 			motion[instanceId].y -= JUMP_HEIGHT
 		
 		jumpAmount += 1
-		audio.stream = load("res://resources/sounds/fx/jump.wav")
-		audio.play()
+		Audio.playFX("jump")
 	
 	# Sliding & jump / fall animation
 	if is_on_floor():
@@ -142,8 +138,7 @@ func damage(amount):
 		_set_health(health - amount)
 		invulnerability_timer.start()
 		knockback()
-		audio.stream = load("res://resources/sounds/fx/damage.wav")
-		audio.play()
+		Audio.playFX("damage")
 	
 func kill():
 	get_tree().change_scene("res://resources/scenes/deathscreen.tscn")
