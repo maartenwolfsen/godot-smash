@@ -4,6 +4,9 @@ signal health_updated(health)
 signal killed()
 signal knockback()
 
+const P1ID = "1339"
+const P2ID = "1354"
+
 # Movement
 const UP = Vector2(0, -1)
 const MAX_SPEED = 150
@@ -14,10 +17,12 @@ const GRAVITY = 10
 const JUMP_HEIGHT = 200
 const MAX_JUMP_HEIGHT = 500
 
-var motion = Vector2()
+var playerID = null
+
+var motion = {}
 var jumpAmount = 0
 var attack_animation = false
-onready var player = AudioStreamPlayer.new()
+#onready var audio = AudioStreamPlayer.new()
 
 # Health
 export (float) var percentage = 0
@@ -32,39 +37,48 @@ onready var attack_light_collision = $fighterKirby/attack_light_hit/CollisionSha
 onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light_particles
 
 onready var damageText = $damage_percentage
+onready	var audio = AudioStreamPlayer.new()
 
 func _physics_process(delta):
-	self.add_child(player)
+	if typeof(playerID) != TYPE_NIL && playerID != null:
+		pass
+	
+	var instanceId = self.get_instance_id()
+	
+	if !motion.has(instanceId):
+		motion[instanceId] = Vector2()
+	
+	self.add_child(audio)
 
-	motion.y += GRAVITY
+	motion[instanceId].y += GRAVITY
 	var friction = false
 		
 	# Attack
-	if Input.is_action_just_pressed("action_attack_light") && is_on_floor() && !attack_animation:
-		player.stream = load("res://resources/sounds/fx/attack_light.wav")
-		player.play()
-		kirbatjov.play("attack_light")
-		attack_light_collision.disabled = false
-		attack_light_particles.visible = true
-		attack_light_particles.set_frame(0)
-		attack_light_particles.play("attack_light_particles")
-		attack_animation = true
-	if attack_light_particles.animation == "attack_light_particles" && attack_light_particles.frame == attack_light_particles.frames.get_frame_count("attack_light_particles") - 1:
-		attack_animation = false
-		attack_light_collision.disabled = true
-		attack_light_particles.visible = false
+	#if Input.is_action_just_pressed() && is_on_floor() && !attack_animation:
+		#audio.stream = load("res://resources/sounds/fx/attack_light.wav")
+		#audio.play()
+	#	kirbatjov.play("attack_light")
+	#	attack_light_collision.disabled = false
+	#	attack_light_particles.visible = true
+	#	attack_light_particles.set_frame(0)
+	#	attack_light_particles.play("attack_light_particles")
+	#	attack_animation = true
+	#if attack_light_particles.animation == "attack_light_particles" && attack_light_particles.frame == attack_light_particles.frames.get_frame_count("attack_light_particles") - 1:
+	#	attack_animation = false
+	#	attack_light_collision.disabled = true
+	#	attack_light_particles.visible = false
 	
 	# Run direction / acceleration
-	if Input.is_action_pressed("ui_right"):
-		if Input.is_action_pressed("action_run"):
-			motion.x += RUN_ACCELERATION
-			motion.x = min(motion.x + RUN_ACCELERATION, RUN_MAX_SPEED)
+	if Input.is_action_pressed("dir_right_p" + str(playerID)):
+		if Input.is_action_pressed("run_p" + str(playerID)):
+			motion[instanceId].x += RUN_ACCELERATION
+			motion[instanceId].x = min(motion[instanceId].x + RUN_ACCELERATION, RUN_MAX_SPEED)
 			
 			if !attack_animation:
 				kirbatjov.play("run")
 		else:
-			motion.x += ACCELERATION
-			motion.x = min(motion.x + ACCELERATION, MAX_SPEED)
+			motion[instanceId].x += ACCELERATION
+			motion[instanceId].x = min(motion[instanceId].x + ACCELERATION, MAX_SPEED)
 			
 			if !attack_animation:
 				kirbatjov.play("walk")
@@ -72,16 +86,16 @@ func _physics_process(delta):
 		kirbatjov.flip_h = false
 		attack_light_particles.flip_h = false
 		attack_light_particles.set_offset(Vector2(0, 0))
-	elif Input.is_action_pressed("ui_left"):
-		if Input.is_action_pressed("action_run"):
-			motion.x -= RUN_ACCELERATION
-			motion.x = max(motion.x - RUN_ACCELERATION, -RUN_MAX_SPEED)
+	elif Input.is_action_pressed("dir_left_p" + str(playerID)):
+		if Input.is_action_pressed("run_p" + str(playerID)):
+			motion[instanceId].x -= RUN_ACCELERATION
+			motion[instanceId].x = max(motion[instanceId].x - RUN_ACCELERATION, -RUN_MAX_SPEED)
 			
 			if !attack_animation:
 				kirbatjov.play("run")
 		else:
-			motion.x -= ACCELERATION
-			motion.x = max(motion.x - ACCELERATION, -MAX_SPEED)
+			motion[instanceId].x -= ACCELERATION
+			motion[instanceId].x = max(motion[instanceId].x - ACCELERATION, -MAX_SPEED)
 			
 			if !attack_animation:
 				kirbatjov.play("walk")
@@ -96,30 +110,30 @@ func _physics_process(delta):
 			kirbatjov.play("idle")
 	
 	# Double jump
-	if Input.is_action_just_pressed("ui_up") && jumpAmount < 1:
-		if (motion.y < MAX_JUMP_HEIGHT):
-			motion.y -= JUMP_HEIGHT
+	if Input.is_action_just_pressed("dir_up_p" + str(playerID)) && jumpAmount < 1:
+		if (motion[instanceId].y < MAX_JUMP_HEIGHT):
+			motion[instanceId].y -= JUMP_HEIGHT
 		
 		jumpAmount += 1
-		player.stream = load("res://resources/sounds/fx/jump.wav")
-		player.play()
+		audio.stream = load("res://resources/sounds/fx/jump.wav")
+		audio.play()
 	
 	# Sliding & jump / fall animation
 	if is_on_floor():
 		jumpAmount = 0
 		
 		if friction == true:
-			motion.x = lerp(motion.x, 0, 0.2)
+			motion[instanceId].x = lerp(motion[instanceId].x, 0, 0.2)
 	else:		
-		if motion.y < 0:
+		if motion[instanceId].y < 0:
 			kirbatjov.play("jump")
 		else:
 			kirbatjov.play("falling")
 		
 		if friction == true:
-			motion.x = lerp(motion.x, 0, 0.05)
-
-	motion = move_and_slide(motion, UP)
+			motion[instanceId].x = lerp(motion[instanceId].x, 0, 0.05)
+	
+	motion[instanceId] = self.move_and_slide(motion[instanceId], UP)
 	
 	pass
 	
@@ -128,8 +142,8 @@ func damage(amount):
 		_set_health(health - amount)
 		invulnerability_timer.start()
 		knockback()
-		player.stream = load("res://resources/sounds/fx/damage.wav")
-		player.play()
+		audio.stream = load("res://resources/sounds/fx/damage.wav")
+		audio.play()
 	
 func kill():
 	get_tree().change_scene("res://resources/scenes/deathscreen.tscn")
@@ -148,10 +162,10 @@ func _set_health(value):
 			kill()
 			emit_signal("killed")
 
-func _on_playerArea_area_entered(area):
-	damage(20)
-	print(health)
-	pass
+#func _on_playerArea_area_entered(area):
+#	damage(20)
+#	print(health)
+#	pass
 
 func knockback():
 	motion.x -= health * 15
@@ -162,3 +176,6 @@ func knockback():
 		
 	motion.y -= ymot
 	pass
+	
+func init(pID):
+	playerID = pID

@@ -56,40 +56,40 @@ animations = [ {
 "name": "idle",
 "speed": 12.0
 }, {
-"frames": [ ExtResource( 8 ), ExtResource( 16 ), ExtResource( 6 ), ExtResource( 16 ), ExtResource( 8 ) ],
-"loop": true,
-"name": "damage",
-"speed": 0.0
-}, {
 "frames": [  ],
 "loop": true,
 "name": "attack_light_particles",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 16 ), ExtResource( 6 ), ExtResource( 16 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "damage",
+"speed": 0.0
 }, {
 "frames": [ ExtResource( 10 ) ],
 "loop": true,
 "name": "attack_light",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 18 ), ExtResource( 38 ), ExtResource( 29 ), ExtResource( 35 ), ExtResource( 3 ), ExtResource( 28 ), ExtResource( 25 ), ExtResource( 11 ), ExtResource( 42 ), ExtResource( 21 ), ExtResource( 39 ), ExtResource( 19 ) ],
-"loop": true,
-"name": "walk",
-"speed": 16.0
-}, {
 "frames": [ ExtResource( 13 ), ExtResource( 33 ), ExtResource( 36 ), ExtResource( 41 ), ExtResource( 7 ) ],
 "loop": true,
 "name": "run",
 "speed": 15.0
+}, {
+"frames": [ ExtResource( 20 ) ],
+"loop": true,
+"name": "falling",
+"speed": 5.0
 }, {
 "frames": [ ExtResource( 15 ) ],
 "loop": true,
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 20 ) ],
+"frames": [ ExtResource( 18 ), ExtResource( 38 ), ExtResource( 29 ), ExtResource( 35 ), ExtResource( 3 ), ExtResource( 28 ), ExtResource( 25 ), ExtResource( 11 ), ExtResource( 42 ), ExtResource( 21 ), ExtResource( 39 ), ExtResource( 19 ) ],
 "loop": true,
-"name": "falling",
-"speed": 5.0
+"name": "walk",
+"speed": 16.0
 } ]
 
 [sub_resource type="SpriteFrames" id=3]
