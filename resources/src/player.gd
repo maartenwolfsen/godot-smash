@@ -112,7 +112,7 @@ func _physics_process(delta):
 			motion[instanceId].y -= JUMP_HEIGHT
 		
 		jumpAmount += 1
-		Audio.playFX("jump")
+		Audio.playFX(self, "jump")
 	
 	# Sliding & jump / fall animation
 	if is_on_floor():
