@@ -71,25 +71,25 @@ animations = [ {
 "name": "attack_light",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 18 ), ExtResource( 38 ), ExtResource( 29 ), ExtResource( 35 ), ExtResource( 3 ), ExtResource( 28 ), ExtResource( 25 ), ExtResource( 11 ), ExtResource( 42 ), ExtResource( 21 ), ExtResource( 39 ), ExtResource( 19 ) ],
+"loop": true,
+"name": "walk",
+"speed": 16.0
+}, {
 "frames": [ ExtResource( 13 ), ExtResource( 33 ), ExtResource( 36 ), ExtResource( 41 ), ExtResource( 7 ) ],
 "loop": true,
 "name": "run",
 "speed": 15.0
-}, {
-"frames": [ ExtResource( 20 ) ],
-"loop": true,
-"name": "falling",
-"speed": 5.0
 }, {
 "frames": [ ExtResource( 15 ) ],
 "loop": true,
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 18 ), ExtResource( 38 ), ExtResource( 29 ), ExtResource( 35 ), ExtResource( 3 ), ExtResource( 28 ), ExtResource( 25 ), ExtResource( 11 ), ExtResource( 42 ), ExtResource( 21 ), ExtResource( 39 ), ExtResource( 19 ) ],
+"frames": [ ExtResource( 20 ) ],
 "loop": true,
-"name": "walk",
-"speed": 16.0
+"name": "falling",
+"speed": 5.0
 } ]
 
 [sub_resource type="SpriteFrames" id=3]
@@ -150,11 +150,6 @@ animation = "attack_light_particles"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player/fighterKirby/attack_light_hit"]
 shape = SubResource( 4 )
 disabled = true
-
-[node name="Camera2D" type="Camera2D" parent="player"]
-current = true
-zoom = Vector2( 0.7, 0.7 )
-drag_margin_h_enabled = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="player"]
 

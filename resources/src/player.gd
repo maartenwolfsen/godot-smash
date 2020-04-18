@@ -3,6 +3,7 @@ extends KinematicBody2D
 signal health_updated(health)
 signal killed()
 signal knockback()
+signal move()
 
 const AUDIO = preload("res://resources/src/inc/Audio.gd")
 onready var Audio = AUDIO.new()
@@ -130,8 +131,6 @@ func _physics_process(delta):
 			motion[instanceId].x = lerp(motion[instanceId].x, 0, 0.05)
 	
 	motion[instanceId] = self.move_and_slide(motion[instanceId], UP)
-	
-	pass
 	
 func damage(amount):
 	if invulnerability_timer.is_stopped():
