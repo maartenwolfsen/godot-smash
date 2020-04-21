@@ -23,7 +23,6 @@ var playerID = null
 var motion = {}
 var jumpAmount = 0
 var attack_animation = false
-#onready var audio = AudioStreamPlayer.new()
 
 # Health
 export (float) var percentage = 0

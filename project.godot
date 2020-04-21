@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Kirbatjov_remake"
+config/name="godot_smash"
 run/main_scene="res://resources/scenes/world.tscn"
 
 [display]
