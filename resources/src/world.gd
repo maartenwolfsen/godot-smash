@@ -43,14 +43,12 @@ func init_player(currentPlayer, i):
 
 func init_portrait(currentPlayer, i):
 	var portrait = hud.find_node("p" + str(i) + "_portrait")
-	portrait.find_node("portrait").texture = load(
+	portrait.texture = load(
 		"res://resources/sprites/characters/" + currentPlayer.character + "/portrait/portrait.png"
 	)
 	
 	var player_name = portrait.find_node("player_name")
 	player_name.set_text(currentPlayer.name)
-	player_name.margin_left = 20
-	player_name.margin_top = 20
 	portrait.visible = true
 			
 	camera.add_child(hud)
@@ -59,27 +57,34 @@ func update_camera():
 	if player_container.get_child_count() <= 0:
 		pass
 	
-	var player1 = player_container.get_child(0)
-	var player1pos = player1.get_child(0).get_position()
+	var i = 1
+	for player in player_container.get_children():
+		players[i].position = player.get_child(0).get_position()
+		
+		if (i > 1 && players[i].position.x < players[i - 1].position.x) || i == 1:
+			players["minX"] = players[i].position.x
+			
+		if (i > 1 && players[i].position.x > players[i - 1].position.x) || i == 1:
+			players["maxX"] = players[i].position.x
+		
+		if (i > 1 && players[i].position.y < players[i - 1].position.y) || i == 1:
+			players["minY"] = players[i].position.y
+			
+		i += 1
 	
-	var player2 = player_container.get_child(1)
-	var player2pos = player2.get_child(0).get_position()
-	
-	var leftX = min(player1pos.x, player2pos.x) - PLAYER_MARGIN_X
-	var rightX = max(player1pos.x, player2pos.x) + PLAYER_MARGIN_X
-	var deltaX = rightX - leftX
+	var leftX = players["minX"] - PLAYER_MARGIN_X
+	var rightX = players["maxX"] + PLAYER_MARGIN_X
 	
 	screensize = get_viewport().get_visible_rect().size
 	
-	var deltaXpercentage = deltaX / screensize.x
-	var deltaXrate = 1 + deltaXpercentage
-	
-	var maxY = min(player1pos.y, player2pos.y) - (PLAYER_MARGIN_Y * deltaXrate)
+	var deltaXpercentage = (rightX - leftX) / screensize.x
 	
 	#Set camera position
 	var canvas_position = get_viewport().get_canvas_transform()
 	camera.set_zoom(Vector2(deltaXpercentage, deltaXpercentage))
-	canvas_position.origin = Vector2(leftX, maxY)
+	canvas_position.origin = Vector2(
+		leftX, players["minY"] - (PLAYER_MARGIN_Y * (1 + deltaXpercentage))
+	)
 	camera.set_transform(canvas_position)
 	
 	#Set hud position

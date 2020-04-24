@@ -36,35 +36,36 @@ onready var kirbatjov = $fighterKirby
 onready var attack_light_collision = $fighterKirby/attack_light_hit/CollisionShape2D
 onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light_particles
 
-onready var damageText = $damage_percentage
+var instanceId
+onready var hud = preload("res://resources/scenes/hud.tscn").instance()
 
 func _physics_process(delta):
 	if typeof(playerID) != TYPE_NIL && playerID != null:
 		pass
 	
-	var instanceId = self.get_instance_id()
+	instanceId = self.get_instance_id()
 	
 	if !motion.has(instanceId):
 		motion[instanceId] = Vector2()
-
+	
 	motion[instanceId].y += GRAVITY
 	var friction = false
 		
 	# Attack
-	#if Input.is_action_just_pressed() && is_on_floor() && !attack_animation:
-		#audio.stream = load("res://resources/sounds/fx/attack_light.wav")
-		#audio.play()
-	#	kirbatjov.play("attack_light")
-	#	attack_light_collision.disabled = false
-	#	attack_light_particles.visible = true
-	#	attack_light_particles.set_frame(0)
-	#	attack_light_particles.play("attack_light_particles")
-	#	attack_animation = true
-	#if attack_light_particles.animation == "attack_light_particles" && attack_light_particles.frame == attack_light_particles.frames.get_frame_count("attack_light_particles") - 1:
-	#	attack_animation = false
-	#	attack_light_collision.disabled = true
-	#	attack_light_particles.visible = false
-	
+	if Input.is_action_just_pressed("attack_light_p" + str(playerID)) && is_on_floor() && !attack_animation:
+		Audio.playFX(self, "attack_light")
+		kirbatjov.play("attack_light")
+		attack_light_collision.disabled = false
+		attack_light_particles.visible = true
+		attack_light_particles.set_frame(0)
+		attack_light_particles.play("attack_light_particles")
+		attack_animation = true
+		
+	if attack_light_particles.animation == "attack_light_particles" && attack_light_particles.frame == attack_light_particles.frames.get_frame_count("attack_light_particles") - 1:
+		attack_animation = false
+		attack_light_collision.disabled = true
+		attack_light_particles.visible = false
+		
 	# Run direction / acceleration
 	if Input.is_action_pressed("dir_right_p" + str(playerID)):
 		if Input.is_action_pressed("run_p" + str(playerID)):
@@ -108,11 +109,7 @@ func _physics_process(delta):
 	
 	# Double jump
 	if Input.is_action_just_pressed("dir_up_p" + str(playerID)) && jumpAmount < 1:
-		if (motion[instanceId].y < MAX_JUMP_HEIGHT):
-			motion[instanceId].y -= JUMP_HEIGHT
-		
-		jumpAmount += 1
-		Audio.playFX(self, "jump")
+		jump()
 	
 	# Sliding & jump / fall animation
 	if is_on_floor():
@@ -120,7 +117,7 @@ func _physics_process(delta):
 		
 		if friction == true:
 			motion[instanceId].x = lerp(motion[instanceId].x, 0, 0.2)
-	else:		
+	else:
 		if motion[instanceId].y < 0:
 			kirbatjov.play("jump")
 		else:
@@ -134,9 +131,13 @@ func _physics_process(delta):
 func damage(amount):
 	if invulnerability_timer.is_stopped():
 		_set_health(health - amount)
+		
+		var portrait = hud.find_node("p" + str(playerID) + "_portrait")
+		portrait.find_node("damage").set_text(str(health))
+		
 		invulnerability_timer.start()
 		knockback()
-		Audio.playFX("damage")
+		Audio.playFX(self, "damage")
 	
 func kill():
 	get_tree().change_scene("res://resources/scenes/deathscreen.tscn")
@@ -146,8 +147,6 @@ func _set_health(value):
 	var prev_health = health
 	health = ceil(health + (health / 4) + 5)
 	
-	damageText.set_text(str(health) + "%")
-	
 	if health != prev_health:
 		emit_signal("health_updated", health)
 		
@@ -155,20 +154,26 @@ func _set_health(value):
 			kill()
 			emit_signal("killed")
 
-#func _on_playerArea_area_entered(area):
-#	damage(20)
-#	print(health)
-#	pass
+func _on_playerArea_area_entered(area):
+	damage(20)
+	pass
 
 func knockback():
-	motion.x -= health * 15
+	motion[instanceId].x -= health * 15
 	var ymot = 100 + (health * 3)
 	
 	if ymot > 400:
 		ymot = 400
 		
-	motion.y -= ymot
+	motion[instanceId].y -= ymot
 	pass
 	
 func init(pID):
 	playerID = pID
+
+func jump():
+	if (motion[instanceId].y < MAX_JUMP_HEIGHT):
+		motion[instanceId].y -= JUMP_HEIGHT
+	
+	jumpAmount += 1
+	Audio.playFX(self, "jump")

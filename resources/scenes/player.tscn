@@ -75,11 +75,6 @@ animations = [ {
 "name": "jump",
 "speed": 8.0
 }, {
-"frames": [ ExtResource( 18 ), ExtResource( 38 ), ExtResource( 29 ), ExtResource( 35 ), ExtResource( 3 ), ExtResource( 28 ), ExtResource( 25 ), ExtResource( 11 ), ExtResource( 42 ), ExtResource( 21 ), ExtResource( 39 ), ExtResource( 19 ) ],
-"loop": true,
-"name": "walk",
-"speed": 16.0
-}, {
 "frames": [ ExtResource( 20 ) ],
 "loop": true,
 "name": "falling",
@@ -89,6 +84,11 @@ animations = [ {
 "loop": true,
 "name": "run",
 "speed": 15.0
+}, {
+"frames": [ ExtResource( 18 ), ExtResource( 38 ), ExtResource( 29 ), ExtResource( 35 ), ExtResource( 3 ), ExtResource( 28 ), ExtResource( 25 ), ExtResource( 11 ), ExtResource( 42 ), ExtResource( 21 ), ExtResource( 39 ), ExtResource( 19 ) ],
+"loop": true,
+"name": "walk",
+"speed": 16.0
 } ]
 
 [sub_resource type="SpriteFrames" id=3]
@@ -130,17 +130,19 @@ scale = Vector2( 0.5, 0.41 )
 shape = SubResource( 1 )
 
 [node name="attack_light_hit" type="Area2D" parent="player/fighterKirby"]
-position = Vector2( 400, 35 )
+position = Vector2( 410, 35 )
 scale = Vector2( 1, 0.5 )
 
 [node name="attack_light_particles" type="AnimatedSprite" parent="player/fighterKirby/attack_light_hit"]
 visible = false
 position = Vector2( -62.5, 5.00049 )
 scale = Vector2( 1, 2 )
+z_index = 20
 frames = SubResource( 3 )
 animation = "attack_light_particles"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player/fighterKirby/attack_light_hit"]
+modulate = Color( 1, 0, 0, 1 )
 shape = SubResource( 4 )
 disabled = true
 
