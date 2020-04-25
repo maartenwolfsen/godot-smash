@@ -37,9 +37,12 @@ onready var attack_light_collision = $fighterKirby/attack_light_hit/CollisionSha
 onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light_particles
 
 var instanceId
-onready var hud = preload("res://resources/scenes/hud.tscn").instance()
+onready var hud = null
 
-func _physics_process(delta):
+func _ready():
+	hud = get_node("/root/World/smash_camera/hud")
+
+func _physics_process(delta):	
 	if typeof(playerID) != TYPE_NIL && playerID != null:
 		pass
 	
@@ -132,9 +135,7 @@ func damage(amount):
 	if invulnerability_timer.is_stopped():
 		_set_health(health - amount)
 		
-		var portrait = hud.find_node("p" + str(playerID) + "_portrait")
-		portrait.find_node("damage").set_text(str(health))
-		
+		hud.find_node("p" + str(playerID) + "_portrait").find_node("damage").set_text(str(health) + "%")
 		invulnerability_timer.start()
 		knockback()
 		Audio.playFX(self, "damage")
@@ -144,15 +145,20 @@ func kill():
 	pass
 
 func _set_health(value):
+	if health >= 300:
+		health = 300
+		pass
+		
 	var prev_health = health
 	health = ceil(health + (health / 4) + 5)
 	
 	if health != prev_health:
 		emit_signal("health_updated", health)
 		
-		if health == 0:
-			kill()
-			emit_signal("killed")
+		#TODO: kill via deathzone
+		#if health == 0:
+		#	kill()
+		#	emit_signal("killed")
 
 func _on_playerArea_area_entered(area):
 	damage(20)
@@ -177,3 +183,4 @@ func jump():
 	
 	jumpAmount += 1
 	Audio.playFX(self, "jump")
+	

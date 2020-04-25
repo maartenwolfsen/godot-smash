@@ -29,8 +29,8 @@ func _ready():
 	Audio.playStageTrack(self, "greens_greens", -20)
 	
 	for i in players:
-		init_player(players[i], i)
 		init_portrait(players[i], i)
+		init_player(players[i], i)
 
 func _process(delta):
 	update_camera()	

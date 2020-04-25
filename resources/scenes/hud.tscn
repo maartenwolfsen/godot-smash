@@ -20,6 +20,7 @@ anchor_bottom = 1.0
 margin_bottom = 40.0
 
 [node name="p1_portrait" type="TextureRect" parent="."]
+visible = false
 margin_left = 20.0
 margin_top = 260.0
 margin_right = 100.0
@@ -54,6 +55,7 @@ __meta__ = {
 }
 
 [node name="p2_portrait" type="TextureRect" parent="."]
+visible = false
 margin_left = 120.0
 margin_top = 260.0
 margin_right = 200.0
