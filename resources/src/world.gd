@@ -39,7 +39,8 @@ func init_player(currentPlayer, i):
 	var player = preload("res://resources/scenes/player.tscn").instance()
 	player.get_child(0).init(i)
 	player_container.add_child(player)
-	player.get_child(0).set_position(Vector2(80 * i, 305))
+	#TODO: Dynamic spawning
+	player.get_child(0).set_position(Vector2(100 + (80 * i), 200))
 
 func init_portrait(currentPlayer, i):
 	var portrait = hud.find_node("p" + str(i) + "_portrait")
@@ -89,3 +90,7 @@ func update_camera():
 	
 	#Set hud position
 	hud.set_scale(Vector2(pow(deltaXpercentage, 2), pow(deltaXpercentage, 2)))
+
+
+func _on_deathzone_area_entered(area):
+	print(area.find_parent("player").kill())

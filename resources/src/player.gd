@@ -40,13 +40,17 @@ onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light
 
 var instanceId
 onready var hud = null
+var is_dead = false
 
 func _ready():
 	hud = get_node("/root/World/smash_camera/hud")
 
-func _physics_process(delta):	
+func _physics_process(delta):
 	if typeof(playerID) != TYPE_NIL && playerID != null:
 		pass
+	
+	if is_dead:
+		return
 	
 	instanceId = self.get_instance_id()
 	
@@ -143,6 +147,18 @@ func damage(amount):
 		Audio.playFX(self, "damage")
 	
 func kill():
+	is_dead = true
+	
+	var death_explosion = self.find_node("death_explosion")
+	death_explosion.visible = true
+	death_explosion.play("death_explosion")
+	
+	#Death timer
+	var frames = death_explosion.frames
+	var anim_name = death_explosion.animation
+	yield(get_tree().create_timer(
+		1 / frames.get_animation_speed(anim_name) * frames.get_frame_count(anim_name)
+	), "timeout")
 	get_tree().change_scene("res://resources/scenes/deathscreen.tscn")
 	pass
 
@@ -152,11 +168,6 @@ func _set_health(value):
 	
 	if health != prev_health:
 		emit_signal("health_updated", health)
-		
-		#TODO: kill via deathzone
-		#if health == 0:
-		#	kill()
-		#	emit_signal("killed")
 		
 	if health >= MAX_HEALTH:
 		health = MAX_HEALTH
