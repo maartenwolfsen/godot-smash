@@ -27,6 +27,8 @@ var attack_animation = false
 # Health
 export (float) var percentage = 0
 
+const MAX_HEALTH = 300
+
 onready var health = percentage setget _set_health
 onready var invulnerability_timer = $InvulnerabilityTimer
 
@@ -137,7 +139,7 @@ func damage(amount):
 		
 		hud.find_node("p" + str(playerID) + "_portrait").find_node("damage").set_text(str(health) + "%")
 		invulnerability_timer.start()
-		knockback()
+		#knockback()
 		Audio.playFX(self, "damage")
 	
 func kill():
@@ -145,10 +147,6 @@ func kill():
 	pass
 
 func _set_health(value):
-	if health >= 300:
-		health = 300
-		pass
-		
 	var prev_health = health
 	health = ceil(health + (health / 4) + 5)
 	
@@ -159,6 +157,9 @@ func _set_health(value):
 		#if health == 0:
 		#	kill()
 		#	emit_signal("killed")
+		
+	if health >= MAX_HEALTH:
+		health = MAX_HEALTH
 
 func _on_playerArea_area_entered(area):
 	damage(20)
