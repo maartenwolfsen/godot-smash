@@ -137,16 +137,21 @@ func _physics_process(delta):
 			motion[instanceId].x = lerp(motion[instanceId].x, 0, 0.05)
 	
 	motion[instanceId] = self.move_and_slide(motion[instanceId], UP)
+
+func _process(delta):
+	if invulnerability_timer.is_stopped() && $fighterKirby/hit_particles.emitting:
+		$fighterKirby/hit_particles.emitting = false
 	
-func damage(amount, area):	
+func damage(amount, area):
 	if invulnerability_timer.is_stopped():
 		var playerSprite = area.get_child(0)
 		if playerSprite.get_class() == "AnimatedSprite":
 			_set_health(health - amount)
 			
+			$fighterKirby/hit_particles.emitting = true
 			hud.find_node("p" + str(playerID) + "_portrait").find_node("damage").set_text(str(health) + "%")
 			knockback(playerSprite.flip_h)
-			Audio.playFX(self, "damage")
+			Audio.playFX(self, "attack_light_hit")
 			
 			invulnerability_timer.start()
 	
