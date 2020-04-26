@@ -34,7 +34,6 @@ onready var invulnerability_timer = $InvulnerabilityTimer
 
 # Sprites
 onready var kirbatjov = $fighterKirby
-
 onready var attack_light_collision = $fighterKirby/attack_light_hit/CollisionShape2D
 onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light_particles
 
@@ -59,7 +58,7 @@ func _physics_process(delta):
 	
 	motion[instanceId].y += GRAVITY
 	var friction = false
-		
+	
 	# Attack
 	if Input.is_action_just_pressed("attack_light_p" + str(playerID)) && is_on_floor() && !attack_animation:
 		Audio.playFX(self, "attack_light")
@@ -93,6 +92,7 @@ func _physics_process(delta):
 		kirbatjov.flip_h = false
 		attack_light_particles.flip_h = false
 		attack_light_particles.set_offset(Vector2(0, 0))
+		attack_light_collision.set_position(Vector2(-65, 0))
 	elif Input.is_action_pressed("dir_left_p" + str(playerID)):
 		if Input.is_action_pressed("run_p" + str(playerID)):
 			motion[instanceId].x -= RUN_ACCELERATION
@@ -110,6 +110,7 @@ func _physics_process(delta):
 		kirbatjov.flip_h = true
 		attack_light_particles.flip_h = true
 		attack_light_particles.set_offset(Vector2(-680, 0))
+		attack_light_collision.set_position(Vector2(-750, 0))
 	else:
 		friction = true
 		
@@ -137,14 +138,17 @@ func _physics_process(delta):
 	
 	motion[instanceId] = self.move_and_slide(motion[instanceId], UP)
 	
-func damage(amount):
+func damage(amount, area):	
 	if invulnerability_timer.is_stopped():
-		_set_health(health - amount)
-		
-		hud.find_node("p" + str(playerID) + "_portrait").find_node("damage").set_text(str(health) + "%")
-		invulnerability_timer.start()
-		#knockback()
-		Audio.playFX(self, "damage")
+		var playerSprite = area.get_child(0)
+		if playerSprite.get_class() == "AnimatedSprite":
+			_set_health(health - amount)
+			
+			hud.find_node("p" + str(playerID) + "_portrait").find_node("damage").set_text(str(health) + "%")
+			knockback(playerSprite.flip_h)
+			Audio.playFX(self, "damage")
+			
+			invulnerability_timer.start()
 	
 func kill():
 	is_dead = true
@@ -173,11 +177,15 @@ func _set_health(value):
 		health = MAX_HEALTH
 
 func _on_playerArea_area_entered(area):
-	damage(20)
+	damage(20, area)
 	pass
 
-func knockback():
-	motion[instanceId].x -= health * 15
+func knockback(direction):
+	if direction:
+		motion[instanceId].x -= health * 15
+	else:
+		motion[instanceId].x += health * 15
+	
 	var ymot = 100 + (health * 3)
 	
 	if ymot > 400:
