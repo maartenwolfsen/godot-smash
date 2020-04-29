@@ -37,6 +37,9 @@ onready var kirbatjov = $fighterKirby
 onready var attack_light_collision = $fighterKirby/attack_light_hit/CollisionShape2D
 onready var attack_light_particles = $fighterKirby/attack_light_hit/attack_light_particles
 
+# Attack
+const INITIAL_VELOCITY_VALUE = 380
+
 var instanceId
 onready var hud = null
 var is_dead = false
@@ -141,7 +144,7 @@ func _physics_process(delta):
 func _process(delta):
 	if invulnerability_timer.is_stopped() && $fighterKirby/hit_particles.emitting:
 		$fighterKirby/hit_particles.emitting = false
-	
+
 func damage(amount, area):
 	if invulnerability_timer.is_stopped():
 		var playerSprite = area.get_child(0)
@@ -149,6 +152,14 @@ func damage(amount, area):
 			_set_health(health - amount)
 			
 			$fighterKirby/hit_particles.emitting = true
+			var particle_transform = $fighterKirby/hit_particles.get_position()
+			if playerSprite.flip_h:
+				$fighterKirby/hit_particles.set_position(Vector2(particle_transform.x - 80, particle_transform.y))
+				$fighterKirby/hit_particles.process_material.initial_velocity = -INITIAL_VELOCITY_VALUE
+			else:
+				$fighterKirby/hit_particles.set_position(Vector2(particle_transform.x + 80, particle_transform.y))
+				$fighterKirby/hit_particles.process_material.initial_velocity = INITIAL_VELOCITY_VALUE
+				
 			hud.find_node("p" + str(playerID) + "_portrait").find_node("damage").set_text(str(health) + "%")
 			knockback(playerSprite.flip_h)
 			Audio.playFX(self, "attack_light_hit")
