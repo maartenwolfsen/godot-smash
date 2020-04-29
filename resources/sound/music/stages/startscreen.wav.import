@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/startscreen.wav-aea8197489d21b389afc0bb98ec2138e.sample"
+
+[deps]
+
+source_file="res://resources/sound/music/stages/startscreen.wav"
+dest_files=[ "res://.import/startscreen.wav-aea8197489d21b389afc0bb98ec2138e.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

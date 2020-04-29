@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/start.wav-67f779172746858b12488eec82f503e3.sample"
+
+[deps]
+
+source_file="res://resources/sound/fx/ui/start.wav"
+dest_files=[ "res://.import/start.wav-67f779172746858b12488eec82f503e3.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
