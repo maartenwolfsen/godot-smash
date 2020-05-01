@@ -1,0 +1,30 @@
+{
+    "kirby": {
+        "name": "kirby",
+        "base_strength": 1,
+        "base_weight": 0.7,
+        "base_damage": 1,
+        "base_speed": 1
+    },
+    "mario": {
+        "name": "mario",
+        "base_strength": 1,
+        "base_weight": 1,
+        "base_damage": 1,
+        "base_speed": 1
+    },
+    "donkeykong": {
+        "name": "donkeykong",
+        "base_strength": 1.5,
+        "base_weight": 1.5,
+        "base_damage": 1.5,
+        "base_speed": 0.7
+    },
+    "pikachu": {
+        "name": "pikachu",
+        "base_strength": 0.7,
+        "base_weight": 0.7,
+        "base_damage": 1,
+        "base_speed": 1.5
+    }
+}

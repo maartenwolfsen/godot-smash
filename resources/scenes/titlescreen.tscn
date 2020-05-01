@@ -1,31 +1,122 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://resources/sprites/backgrounds/startscreen/startscreen.jpg" type="Texture" id=1]
 [ext_resource path="res://resources/scenes/titlescreen.gd" type="Script" id=2]
-[ext_resource path="res://resources/sprites/ui/start.png" type="Texture" id=4]
+[ext_resource path="res://resources/sprites/backgrounds/startscreen/main_menu.jpg" type="Texture" id=3]
+[ext_resource path="res://resources/sprites/ui/button_play.png" type="Texture" id=4]
+[ext_resource path="res://resources/sprites/ui/button_data.png" type="Texture" id=5]
+[ext_resource path="res://resources/sprites/ui/button_options.png" type="Texture" id=6]
+[ext_resource path="res://resources/sprites/ui/button_vs.png" type="Texture" id=7]
+[ext_resource path="res://resources/sprites/ui/title_mainmenu.png" type="Texture" id=8]
+[ext_resource path="res://resources/sprites/ui/title_choosecharacter.png" type="Texture" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 64, 16 )
 
-[node name="startscreen" type="Node2D"]
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 64, 16 )
+
+[node name="menu" type="Node2D"]
 script = ExtResource( 2 )
 
-[node name="startscreen" type="Sprite" parent="."]
+[node name="start_menu" type="Node2D" parent="."]
+
+[node name="startscreen" type="Sprite" parent="start_menu"]
 position = Vector2( 320, 184 )
 scale = Vector2( 0.333333, 0.340741 )
 texture = ExtResource( 1 )
 
-[node name="start" type="Area2D" parent="."]
+[node name="start" type="Area2D" parent="start_menu"]
 
-[node name="start_button" type="Sprite" parent="start"]
-modulate = Color( 1, 1, 1, 0.784314 )
+[node name="Sprite" type="Sprite" parent="start_menu/start"]
 position = Vector2( 320, 192 )
 scale = Vector2( 0.426667, 0.4 )
 texture = ExtResource( 4 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="start"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="start_menu/start"]
 position = Vector2( 320, 192 )
 shape = SubResource( 1 )
-[connection signal="input_event" from="start" to="." method="_on_start_input_event"]
-[connection signal="mouse_entered" from="start" to="." method="_on_start_mouse_entered"]
-[connection signal="mouse_exited" from="start" to="." method="_on_start_mouse_exited"]
+
+[node name="main_menu" type="Node2D" parent="."]
+visible = false
+
+[node name="background" type="Sprite" parent="main_menu"]
+position = Vector2( 320, 184 )
+scale = Vector2( 0.333333, 0.340741 )
+texture = ExtResource( 3 )
+
+[node name="title_mainmenu" type="Sprite" parent="main_menu"]
+position = Vector2( 208, 64 )
+scale = Vector2( 0.46, 0.5 )
+texture = ExtResource( 8 )
+
+[node name="button_vs" type="Area2D" parent="main_menu"]
+position = Vector2( 0.000335693, -0.000137329 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="main_menu/button_vs"]
+position = Vector2( 192, 112 )
+scale = Vector2( 0.426667, 0.4 )
+texture = ExtResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="main_menu/button_vs"]
+position = Vector2( 192, 112 )
+shape = SubResource( 2 )
+
+[node name="button_options" type="Area2D" parent="main_menu"]
+position = Vector2( 0.000335693, -16 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="main_menu/button_options"]
+position = Vector2( 192, 176 )
+scale = Vector2( 0.426667, 0.4 )
+texture = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="main_menu/button_options"]
+position = Vector2( 192, 176 )
+shape = SubResource( 2 )
+
+[node name="button_data" type="Area2D" parent="main_menu"]
+position = Vector2( 0.000335693, 96 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="main_menu/button_data"]
+position = Vector2( 192, 112 )
+scale = Vector2( 0.426667, 0.4 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="main_menu/button_data"]
+position = Vector2( 192, 112 )
+shape = SubResource( 2 )
+
+[node name="choose_character" type="Node2D" parent="."]
+visible = false
+
+[node name="background" type="Sprite" parent="choose_character"]
+position = Vector2( 320, 184 )
+scale = Vector2( 0.333333, 0.340741 )
+texture = ExtResource( 3 )
+
+[node name="title_choose_character" type="Sprite" parent="choose_character"]
+position = Vector2( 144, 80 )
+scale = Vector2( 0.45, 0.525 )
+texture = ExtResource( 9 )
+
+[node name="character_container" type="Node2D" parent="choose_character"]
+position = Vector2( 64, 112 )
+[connection signal="input_event" from="start_menu/start" to="." method="_on_start_input_event"]
+[connection signal="mouse_entered" from="start_menu/start" to="." method="_on_start_mouse_entered"]
+[connection signal="mouse_exited" from="start_menu/start" to="." method="_on_start_mouse_exited"]
+[connection signal="input_event" from="main_menu/button_vs" to="." method="_on_button_vs_input_event"]
+[connection signal="mouse_entered" from="main_menu/button_vs" to="." method="_on_button_vs_mouse_entered"]
+[connection signal="mouse_exited" from="main_menu/button_vs" to="." method="_on_button_vs_mouse_exited"]
+[connection signal="mouse_entered" from="main_menu/button_options" to="." method="_on_button_options_mouse_entered"]
+[connection signal="mouse_exited" from="main_menu/button_options" to="." method="_on_button_options_mouse_exited"]
+[connection signal="mouse_entered" from="main_menu/button_data" to="." method="_on_button_data_mouse_entered"]
+[connection signal="mouse_exited" from="main_menu/button_data" to="." method="_on_button_data_mouse_exited"]
