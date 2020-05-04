@@ -3,8 +3,8 @@ extends Node2D
 const AUDIO = preload("res://resources/src/inc/Audio.gd")
 onready var Audio = AUDIO.new()
 
-const JSONLIB = preload("res://resources/src/inc/json.gd")
-onready var Json = JSONLIB.new()
+const CHARACTER = preload("res://resources/src/inc/character.gd")
+onready var Character = CHARACTER.new()
 
 var button_hover_scale = Vector2(1, 1)
 var player_selection_turn = 1
@@ -14,11 +14,10 @@ onready var main_menu = get_node("main_menu")
 onready var choose_character = get_node("choose_character")
 onready var character_container = get_node("choose_character/character_container")
 
+# Todo: player amount dynamically
 var players_amount = 2
 
 # Character selection
-onready var characters = Json.read_file('data/characters')
-onready var characters_amount = characters.size()
 var character_selection_mode = false
 var selection_pointer = 0
 var selection_player = 1
@@ -29,6 +28,8 @@ func _ready():
 func _process(delta):
 	# Player selection
 	if character_selection_mode:
+		var characters_amount = Character.get_characters_amount()
+		
 		if Input.is_action_just_pressed("dir_right_p1"):
 			selection_pointer += 1
 		elif Input.is_action_just_pressed("dir_left_p1"):
@@ -36,7 +37,7 @@ func _process(delta):
 		elif Input.is_action_just_pressed("submit_p1"):
 			Audio.playFX(self, "ui/start")
 			Audio.playCharacterSound(
-				self, get_character_by_key(selection_pointer) + "_callout"
+				self, Character.get_character_by_key(selection_pointer) + "_callout"
 			)
 			
 			selection_player += 1
@@ -71,8 +72,6 @@ func _on_start_input_event(viewport, event, shape_idx):
 func _on_button_vs_input_event(viewport, event, shape_idx):		
 	if event is InputEventMouseButton && event.is_pressed():
 		open_menu_state(main_menu, choose_character)
-		
-		var characters = Json.read_file('data/characters')
 		init_character_selection()
 		character_selection_mode = true
 
@@ -110,6 +109,7 @@ func init_character_selection():
 	Audio.playFX(self, "ui/choose_character")
 	
 	var i = 0
+	var characters = Character.get_characters()
 	
 	for character in characters:
 		var c = characters[character]
@@ -124,15 +124,5 @@ func init_character_selection():
 		var c_pos = c_sprite.get_transform().origin
 		c_sprite.transform.origin = Vector2(i * 80, c_pos.y)
 		c_sprite.scale = Vector2(0.5, 0.5)
-		
-		i += 1
-
-# Todo: move to own script
-func get_character_by_key(key):
-	var i = 0
-	
-	for character in characters:
-		if i == key:
-			return character
 		
 		i += 1
