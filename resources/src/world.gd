@@ -6,21 +6,15 @@ const PLAYER_MARGIN_Y = 80
 const AUDIO = preload("res://resources/src/inc/Audio.gd")
 onready var Audio = AUDIO.new()
 
+const CHARACTER = preload("res://resources/src/inc/character.gd")
+onready var Character = CHARACTER.new()
+
 onready var player_container = get_node("player_container")
 onready var camera = get_node("smash_camera")
 onready var hud = preload("res://resources/scenes/hud.tscn").instance()
 var screensize
 
-var players = {
-	1: {
-		"name": "bertus",
-		"character": "fighter_kirby"
-	},
-	2: {
-		"name": "harry",
-		"character": "fighter_kirby"
-	}
-}
+var players = Globals.get("player_characters")
 
 func _ready():
 	screensize = self.get_viewport().size
@@ -44,9 +38,7 @@ func init_player(currentPlayer, i):
 
 func init_portrait(currentPlayer, i):
 	var portrait = hud.find_node("p" + str(i) + "_portrait")
-	portrait.texture = load(
-		"res://resources/sprites/characters/" + currentPlayer.character + "/portrait/portrait.png"
-	)
+	portrait.texture = Character.get_character_portrait(currentPlayer.character)
 	
 	var player_name = portrait.find_node("player_name")
 	player_name.set_text(currentPlayer.name)
@@ -93,4 +85,4 @@ func update_camera():
 
 
 func _on_deathzone_area_entered(area):
-	print(area.find_parent("player").kill())
+	area.find_parent("player").kill()

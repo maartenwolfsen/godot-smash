@@ -21,6 +21,7 @@ var players_amount = 2
 var character_selection_mode = false
 var selection_pointer = 0
 var selection_player = 1
+var player_characters = {}
 
 func _ready():
 	Audio.playStageTrack(self, "startscreen", -20)
@@ -35,14 +36,19 @@ func _process(delta):
 		elif Input.is_action_just_pressed("dir_left_p1"):
 			selection_pointer -= 1
 		elif Input.is_action_just_pressed("submit_p1"):
+			var character = Character.get_character_by_key(selection_pointer)
 			Audio.playFX(self, "ui/start")
 			Audio.playCharacterSound(
-				self, Character.get_character_by_key(selection_pointer) + "_callout"
+				self, character + "_callout"
 			)
-			
+			player_characters[selection_pointer] = {
+				"name": str(selection_pointer) + "speler",
+				"character": character
+			}
 			selection_player += 1
+			
 			if selection_player > players_amount:
-				start_game()
+				init_vs_game(players_amount, player_characters)
 			
 		if selection_pointer >= characters_amount:
 			selection_pointer = 0
@@ -101,7 +107,8 @@ func open_menu_state(old_state, new_state):
 	old_state.visible = false
 	new_state.visible = true
 
-func start_game():
+func init_vs_game(player_amount, player_characters):
+	Globals.set("player_characters", player_characters)
 	get_tree().change_scene("res://resources/scenes/world.tscn")
 	pass
 
@@ -116,9 +123,7 @@ func init_character_selection():
 		
 		# Character Portraits
 		var c_sprite = Sprite.new()
-		c_sprite.texture = load(
-			"res://resources/sprites/characters/" + c["name"] + "/portrait.png"
-		)
+		c_sprite.texture = Character.get_character_portrait(c["name"])
 		character_container.add_child(c_sprite)
 		c_sprite.centered = false
 		var c_pos = c_sprite.get_transform().origin

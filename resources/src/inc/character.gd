@@ -15,3 +15,8 @@ func get_character_by_key(key):
 			return character
 		
 		i += 1
+
+func get_character_portrait(character):
+	return load(
+		"res://resources/sprites/characters/" + character + "/portrait.png"
+	)
